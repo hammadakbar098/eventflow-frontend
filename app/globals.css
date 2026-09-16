@@ -1,26 +1,160 @@
 @import "tailwindcss";
+@import "@fontsource-variable/manrope";
+@import "@fontsource-variable/dm-sans";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --alice-blue: #edf2fb;
+  --lavender: #e2eafc;
+  --lavender-2: #d7e3fc;
+  --periwinkle: #ccdbfd;
+  --periwinkle-2: #c1d3fe;
+  --periwinkle-3: #b6ccfe;
+  --baby-blue-ice: #abc4ff;
+  --background: #f8f8f5;
+  --surface: #f0f1ec;
+  --ink: #191c1a;
+  --ink-soft: #333932;
+  --muted: #686e67;
+  --line: #dddfd8;
+  --white: #ffffff;
+  --danger: #a63838;
+  --success: #396044;
+  --font-body: "DM Sans Variable", sans-serif;
+  --font-heading: "Manrope Variable", sans-serif;
 }
 
 @theme inline {
+  --color-alice-blue: var(--alice-blue);
+  --color-lavender: var(--lavender);
+  --color-lavender-2: var(--lavender-2);
+  --color-periwinkle: var(--periwinkle);
+  --color-periwinkle-2: var(--periwinkle-2);
+  --color-periwinkle-3: var(--periwinkle-3);
+  --color-baby-blue-ice: var(--baby-blue-ice);
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-heading);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+button,
+a,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+button:not(:disabled),
+a {
+  cursor: pointer;
+}
+button,
+input {
+  font: inherit;
+}
+::selection {
+  background: var(--periwinkle);
+  color: var(--ink);
+}
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 5px;
+}
+.ef-input:focus-visible {
+  outline: 2px solid var(--periwinkle-3);
+  outline-offset: 2px;
+  border-color: var(--ink);
+}
+.ef-input {
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+.ef-button {
+  transition:
+    transform 220ms ease,
+    background-color 220ms ease,
+    box-shadow 220ms ease;
+}
+.ef-button:hover {
+  transform: translateY(-2px);
+}
+.ef-button:active {
+  transform: translateY(0);
+}
+.ef-button:disabled {
+  transform: none;
+}
+.site-container {
+  width: min(100% - 96px, 1440px);
+  margin-inline: auto;
+}
+.eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+.section-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 4.4vw, 4.5rem);
+  font-weight: 500;
+  letter-spacing: -0.065em;
+  line-height: 1.08;
+}
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  left: 16px;
+  top: -100px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: white;
+  padding: 12px 18px;
+}
+.skip-link:focus {
+  top: 16px;
+}
+.auth-paper {
+  box-shadow: 0 24px 70px -25px rgb(25 28 26 / 30%);
+}
+.ticket-tear {
+  background-image: linear-gradient(to right, var(--line) 50%, transparent 50%);
+  background-size: 12px 1px;
+  background-repeat: repeat-x;
+}
+@media (max-width: 767px) {
+  .site-container {
+    width: calc(100% - 40px);
   }
 }
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

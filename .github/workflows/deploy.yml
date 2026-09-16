@@ -48,6 +48,10 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.image.outputs.image_uri }}
+          build-args: |
+            NEXT_PUBLIC_API_BASE_URL=${{ vars.NEXT_PUBLIC_API_BASE_URL }}
+            NEXT_PUBLIC_APP_NAME=EventFlow
+            NEXT_PUBLIC_MEDIA_BASE_URL=${{ vars.NEXT_PUBLIC_MEDIA_BASE_URL }}
 
   deploy:
     needs: build-and-push
