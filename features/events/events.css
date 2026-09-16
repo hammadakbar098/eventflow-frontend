@@ -90,3 +90,102 @@
     margin-top: 48px;
   }
 }
+.event-status {
+  border: 1px solid transparent;
+}
+.event-status-dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: currentColor;
+}
+.event-status[data-status="DRAFT"] {
+  background: var(--background);
+  border-color: var(--line);
+  color: var(--ink-soft);
+}
+.event-status[data-status="DRAFT"] .event-status-dot {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--muted);
+}
+.event-status[data-status="SCHEDULED"] {
+  background: var(--lavender);
+}
+.event-status[data-status="SCHEDULED"] .event-status-dot {
+  background: var(--baby-blue-ice);
+  box-shadow: 0 0 0 2px var(--periwinkle-2);
+}
+.event-status[data-status="PUBLISHED"] {
+  background: color-mix(in srgb, var(--success) 9%, var(--background));
+  color: var(--success);
+}
+.event-status[data-status="SOLD_OUT"] {
+  background: var(--ink);
+  color: var(--white);
+}
+.event-status[data-status="POSTPONED"] {
+  background: var(--alice-blue);
+  border-color: var(--periwinkle-2);
+}
+.event-status[data-status="POSTPONED"] .event-status-dot {
+  background: var(--muted);
+}
+.event-status[data-status="CANCELLED"] {
+  background: color-mix(in srgb, var(--danger) 7%, var(--background));
+  color: var(--danger);
+}
+.event-status[data-status="COMPLETED"] {
+  background: var(--surface);
+  color: var(--muted);
+}
+.event-pill-row {
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+  /* Room for focus outlines inside the scrollable row. */
+  padding: 6px;
+  margin: -6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.event-pill-row::-webkit-scrollbar {
+  display: none;
+}
+.event-pill {
+  position: relative;
+  flex-shrink: 0;
+  min-height: 46px;
+  padding: 10px 17px;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  font-size: 11px;
+  white-space: nowrap;
+  transition:
+    color 180ms ease,
+    border-color 180ms ease;
+}
+.event-pill:hover,
+.event-pill[aria-pressed="true"],
+.event-pill[aria-selected="true"] {
+  border-color: var(--ink);
+}
+.event-pill[aria-pressed="true"],
+.event-pill[aria-selected="true"] {
+  color: var(--white);
+}
+/* Matches Explore's tag options inside scrolling lists. */
+.event-pill:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.event-pill > span:last-child {
+  position: relative;
+}
+.event-pill-indicator {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--ink);
+}

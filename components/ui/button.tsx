@@ -2,12 +2,14 @@ import Link from "next/link";
 import type { ButtonHTMLAttributes, ComponentProps } from "react";
 import { cn } from "@/utils/cn";
 
-type ButtonVariant = "primary" | "secondary" | "light" | "ghost";
+type ButtonVariant = "primary" | "secondary" | "light" | "ghost" | "danger";
 const variants: Record<ButtonVariant, string> = {
   primary: "bg-ink text-white hover:bg-ink-soft",
   secondary: "bg-transparent text-ink border border-line hover:bg-white",
   light: "bg-baby-blue-ice text-ink hover:bg-periwinkle",
   ghost: "bg-transparent text-ink hover:bg-lavender/60",
+  // Reserved for confirming irreversible actions inside a dialog.
+  danger: "bg-danger text-white hover:bg-danger/90",
 };
 export function buttonClasses(
   variant: ButtonVariant = "primary",

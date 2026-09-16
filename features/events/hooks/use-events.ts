@@ -2,13 +2,17 @@
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useHasSession } from "@/features/auth/hooks/use-session";
 import {
   getEvent,
   getEventCategories,
   getEvents,
+  getMyEvent,
+  getMyEvents,
   getTags,
+  getVenues,
 } from "../services/events.service";
-import type { EventFilters } from "../types/event.types";
+import type { EventFilters, MyEventFilters } from "../types/event.types";
 import { eventKeys } from "./event-keys";
 
 function retryPublicQuery(count: number, error: unknown) {
@@ -54,6 +58,41 @@ export function useTags(search = "") {
     queryFn: ({ signal }) => getTags(search, signal),
     staleTime: 5 * 60_000,
     placeholderData: keepPreviousData,
+    retry: retryPublicQuery,
+    networkMode: "always",
+  });
+}
+export function useVenues(search = "") {
+  return useQuery({
+    queryKey: eventKeys.venueSearch(search),
+    queryFn: ({ signal }) => getVenues(search, signal),
+    staleTime: 60_000,
+    placeholderData: keepPreviousData,
+    retry: retryPublicQuery,
+    networkMode: "always",
+  });
+}
+export function useMyEvents(filters: MyEventFilters) {
+  const hasSession = useHasSession();
+  return useQuery({
+    queryKey: eventKeys.mineList(filters),
+    queryFn: ({ signal }) => getMyEvents(filters, signal),
+    enabled: hasSession,
+    meta: { requiresSession: true },
+    staleTime: 30_000,
+    placeholderData: keepPreviousData,
+    retry: retryPublicQuery,
+    networkMode: "always",
+  });
+}
+export function useMyEvent(slug: string) {
+  const hasSession = useHasSession();
+  return useQuery({
+    queryKey: eventKeys.mineDetail(slug),
+    queryFn: ({ signal }) => getMyEvent(slug, signal),
+    enabled: hasSession,
+    meta: { requiresSession: true },
+    staleTime: 30_000,
     retry: retryPublicQuery,
     networkMode: "always",
   });

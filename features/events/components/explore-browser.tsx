@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { ArrowLeft, ArrowRight, LoaderCircle, Search, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowRight, LoaderCircle, Search, X } from "lucide-react";
 import { useEventFilters } from "../hooks/use-event-filters";
 import { useEvents } from "../hooks/use-events";
 import { hasEventFilters } from "../utils/event-filters";
 import { EventGridSkeleton } from "./event-card-skeleton";
 import { EventEmptyState, EventErrorState } from "./event-state";
 import { EventGrid } from "./event-grid";
+import { EventPagination } from "./event-pagination";
 import { ExploreFilters } from "./explore-filters";
 
 export function ExploreBrowser() {
@@ -153,41 +153,12 @@ export function ExploreBrowser() {
           <EventEmptyState filtered={filtered} onClear={clearFilters} />
         )}
         {pagination && pagination.totalPages > 1 && !query.isError && (
-          <nav aria-label="Event pagination" className="explore-pagination">
-            <Button
-              variant="secondary"
-              disabled={
-                filters.page <= 1 ||
-                updating ||
-                query.isPlaceholderData ||
-                outOfRange
-              }
-              onClick={() => goToPage(filters.page - 1)}
-              aria-label="Previous page"
-            >
-              <ArrowLeft size={17} aria-hidden="true" />
-              <span>Previous</span>
-            </Button>
-            <p>
-              Page{" "}
-              <strong>{Math.min(filters.page, pagination.totalPages)}</strong>{" "}
-              of {pagination.totalPages}
-            </p>
-            <Button
-              variant="secondary"
-              disabled={
-                filters.page >= pagination.totalPages ||
-                updating ||
-                query.isPlaceholderData ||
-                outOfRange
-              }
-              onClick={() => goToPage(filters.page + 1)}
-              aria-label="Next page"
-            >
-              <span>Next</span>
-              <ArrowRight size={17} aria-hidden="true" />
-            </Button>
-          </nav>
+          <EventPagination
+            page={filters.page}
+            totalPages={pagination.totalPages}
+            disabled={updating || query.isPlaceholderData || outOfRange}
+            onPageChange={(page) => goToPage(page)}
+          />
         )}
       </section>
     </div>

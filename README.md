@@ -1,6 +1,6 @@
 # EventFlow
 
-Public landing, login, signup, event discovery, and public event details for EventFlow. Built with Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Framer Motion, TanStack Query, React Hook Form, Zod, and one Axios client.
+Public landing, login, signup, event discovery, public event details, and the organizer workspace (My events and Create event) for EventFlow. Built with Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Framer Motion, TanStack Query, React Hook Form, Zod, and one Axios client.
 
 ## Local development
 
@@ -20,7 +20,7 @@ NEXT_PUBLIC_APP_NAME=EventFlow
 
 Run the Nest backend on port 3000, then run `npm run dev`. Open [EventFlow on port 3001](http://localhost:3001). The frontend uses a separate port to avoid conflicting with the backend. Restart Next.js after changing environment variables. `.env.local` is ignored; `.env.example` is committed as a template.
 
-Routes: `/`, `/login`, `/signup`, `/events`, `/events/[slug]`. No backend is needed to browse the landing page or validate forms locally. Authentication and live event discovery require the backend; missing configuration, network failures, and server failures render inline feedback.
+Routes: `/`, `/login`, `/signup`, `/events`, `/events/[slug]`, `/dashboard/events`, `/dashboard/events/new`, `/dashboard/events/[slug]`, `/dashboard/events/[slug]/edit`, `/account`. No backend is needed to browse the landing page or validate forms locally. Authentication and live event discovery require the backend; missing configuration, network failures, and server failures render inline feedback.
 
 ## Shared architecture
 
@@ -63,7 +63,7 @@ Foundation was established first, then three implementation agents built the lan
 Form → mutation hook → auth service → Axios → Next.js proxy → Nest backend
 ```
 
-The Axios client uses `/backend` in the browser and the configured backend URL on the server. `next.config.ts` forwards the known auth, public event, category, and tag paths to `NEXT_PUBLIC_API_BASE_URL`. This lets the supplied backend work without CORS changes. Components never contain the upstream URL.
+The Axios client uses `/backend` in the browser and the configured backend URL on the server. `next.config.ts` forwards the known auth, event, organizer event, category, tag, and venue paths to `NEXT_PUBLIC_API_BASE_URL`. This lets the supplied backend work without CORS changes. Components never contain the upstream URL.
 
 | Action | Backend endpoint          | Request fields                               | Verified response                     |
 | ------ | ------------------------- | -------------------------------------------- | ------------------------------------- |
@@ -72,15 +72,17 @@ The Axios client uses `/backend` in the browser and the configured backend URL o
 
 The response contract was inspected in the sibling `eventflow-nestjs` repository. Zod validates responses before success handlers run. Services allowlist request fields, so `confirmPassword` and extra properties cannot reach registration. Email is trimmed and lowercased; names are trimmed; passwords are preserved exactly. Both forms share password rules and show friendly validation messages.
 
-Signup redirects to `/login?registered=1` with an account-created notice. Login displays a success state. `AUTH_SUCCESS_REDIRECT` in `constants/routes.ts` can be set to `/dashboard` when that route and the session lifecycle are implemented.
+Signup redirects to `/login?registered=1` with an account-created notice. Login continues to `/dashboard/events` through `AUTH_SUCCESS_REDIRECT` in `constants/routes.ts`.
 
-Access tokens are kept in memory, and the returned user is held in the query cache. Nothing is saved to localStorage/sessionStorage. Refresh tokens are not persisted or used: the supplied backend has no refresh/logout flow. Authentication therefore does not survive a full page reload. Persistent sessions and dashboard authorization are future integration work. Password recovery is an explicit UI placeholder.
+Access and refresh tokens are kept in memory only (`lib/api/api-client.ts`), and the user is held in the query cache. Nothing is saved to localStorage/sessionStorage, so a full page reload ends the session. When a protected request returns 401, the client calls `POST /api/auth/refresh` once (concurrent failures share a single refresh), stores the rotated tokens and retries the request once; if refreshing fails, the session is cleared and protected pages return to Login. The header account menu logs out with `POST /api/auth/logout`, and `/account` offers `POST /api/auth/logout-all`; both clear the local session even if the server call fails. Password recovery is an explicit UI placeholder.
 
 Mutations do not retry automatically. Forms prevent duplicate submissions, disable fields while pending, and keep entered values after failures. API errors expose only verified public messages or safe status-based descriptions. Forms wait for hydration before enabling submission and use POST as their native method.
 
 ## Design and motion
 
 The seven requested blue palette colors are global CSS variables, with warm neutral surfaces and dark ink. Manrope and DM Sans are self-hosted through Fontsource packages; builds do not download Google Fonts. Photography lives in `public/images/` and uses Next.js image optimization. Source references are in `public/images/README.md`.
+
+Focus follows one standard, set by Explore: the global `:focus-visible` rule in `app/globals.css` draws a 3px ink outline at a 5px offset on every control, including shared `FormField`, `SelectField`, and `TextareaField` inputs. Controls inside tight scroll lists, such as tag and venue options, use a 2px ink outline at a 3px offset. Don't add coloured focus rings. `tests/e2e/focus-style.spec.ts` compares form controls against Explore.
 
 Framer Motion handles hero entrances, layered scroll movement, section reveals, and filtered event cards. The shared provider and individual motion components respect reduced-motion preferences. No GSAP or Zustand is needed for this scope. Landing-page sample cards are clearly labeled inspiration; Explore cards use live event data.
 
@@ -95,7 +97,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Browser tests use `http://localhost:3001` and reuse a running development server or start it automatically. They mock API responses and never create real accounts or events. Coverage includes authentication, exact payloads, validation, safe errors, discovery filters and pagination, debounced search, URL refresh/history, dialog keyboard behavior, public-detail privacy, timezone formatting, gallery order, loading/empty/error states, and reduced motion. Event pages are checked at 320/375/430/768/1024/1280/1440px; the original pages at 320/390/768/1024/1440px. An optional `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` environment variable allows an existing Chromium installation.
+Browser tests use `http://localhost:3001` and reuse a running development server or start it automatically. They mock API responses and never create real accounts or events. Organizer tests sign in through the real login form, because sessions exist only in memory. Coverage includes authentication, exact payloads, validation, safe errors, discovery filters and pagination, debounced search, URL refresh/history, dialog keyboard behavior, public-detail privacy, timezone formatting, gallery order, loading/empty/error states, and reduced motion. Event pages are checked at 320/375/430/768/1024/1280/1440px; the original pages at 320/390/768/1024/1440px. An optional `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` environment variable allows an existing Chromium installation.
 
 ## Production and Docker
 
@@ -129,3 +131,21 @@ The backend currently returns `storageKey` metadata and has no public media-serv
 ### Build environment note
 
 If Turbopack cannot bind its internal worker port in a restricted environment, the supported alternative is `npm run build -- --webpack`. This does not change the application architecture or default build command.
+
+## Organizer workspace
+
+`/dashboard/events` and `/dashboard/events/new` share the public navigation, footer, typography, card anatomy, and motion. `SessionGate` in `features/auth/` renders a log-in state whenever no in-memory token exists, including after a full page reload, so private requests are never sent without a session. The navigation replaces Log in / Get started with My events while a session exists. Tokens expire after 15 minutes and there is no refresh contract, so a `401` shows a session-ended state; Create event keeps the entered values and offers Log in again.
+
+Organizer requests use the same central client, schemas, service, query keys, and hooks as public discovery:
+
+- `GET /api/events/mine?page&limit&search&status&format` (authenticated) → paginated organizer summaries with `status`
+- `GET /api/venues?page&limit&search` → paginated venues
+- `POST /api/venues` (authenticated) → created venue, invalidates venue queries and is selected automatically
+- `POST /api/events` (authenticated) → created draft; only `id`, `slug`, and `status` are kept, organizer lists are invalidated, and the app opens `/dashboard/events/[slug]` using the returned slug
+
+My events stores search, status (`DRAFT`, `SCHEDULED`, `PUBLISHED`, `SOLD_OUT`, `CANCELLED`, `POSTPONED`, `COMPLETED`), format, and page in the URL through the same `useUrlFilters` hook as Explore. Changing a filter resets the page, and first-time and filtered empty states are distinct. Organizer queries are marked `requiresSession` and are removed from the cache whenever the token changes.
+
+`EventForm` takes `mode="create" | "edit"`, optional `defaultValues`, `initialVenue`, `initialTags`, and an `onSubmit(payload)` callback, so the future Edit page can reuse it. React Hook Form and Zod validate every field against the Nest DTO limits, including cross-field format rules. Times are entered in the selected IANA timezone and converted to UTC, with non-existent daylight-saving times rejected. `toEventPayload` omits `venueId` for online events and `onlineDetails` for in-person events, even when hidden sections still hold values. Nest validation and service errors are mapped to field-level messages; raw backend text is never shown.
+
+The Manage event page (`/dashboard/events/[slug]`) is not implemented yet. Until it exists, Manage links and the post-create redirect load Next.js's not-found page, and that full page load ends the in-memory session.
+

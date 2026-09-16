@@ -7,7 +7,15 @@ export const ROUTES = {
   EXPLORE: "/events",
   INSPIRATION: "/#explore",
   EVENT: (slug: string) => `/events/${encodeURIComponent(slug)}`,
+  DASHBOARD: "/dashboard",
+  ACCOUNT: "/account",
+  MY_EVENTS: "/dashboard/events",
+  CREATE_EVENT: "/dashboard/events/new",
+  MANAGE_EVENT: (slug: string) =>
+    `/dashboard/events/${encodeURIComponent(slug)}`,
+  EDIT_EVENT: (slug: string) =>
+    `/dashboard/events/${encodeURIComponent(slug)}/edit`,
 } as const;
 
-// Set to "/dashboard" when the authenticated area and session lifecycle exist.
-export const AUTH_SUCCESS_REDIRECT: string | null = null;
+// Sessions live in memory, so the workspace must be reached by in-app navigation.
+export const AUTH_SUCCESS_REDIRECT: string | null = ROUTES.MY_EVENTS;

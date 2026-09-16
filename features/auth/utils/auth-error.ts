@@ -1,6 +1,11 @@
 import axios from "axios";
 
 type AuthAction = "login" | "register";
+
+// Protected requests answer 401 once the short-lived access token expires.
+export function isSessionError(error: unknown) {
+  return axios.isAxiosError(error) && error.response?.status === 401;
+}
 const safeMessages: Record<string, string> = {
   "Invalid email or password":
     "The email or password is incorrect. Please try again.",

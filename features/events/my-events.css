@@ -1,0 +1,187 @@
+.my-events-intro .explore-intro-note {
+  max-width: 330px;
+}
+.my-events-create {
+  margin-top: 26px;
+}
+.my-events-toolbar {
+  display: flex;
+  align-items: end;
+  gap: 12px 24px;
+  padding-block: 24px;
+}
+.my-events-status-filter {
+  flex: 1;
+}
+.my-events-toolbar-end {
+  display: flex;
+  align-items: end;
+  gap: 18px;
+  flex-shrink: 0;
+}
+.my-events-format-field {
+  width: 180px;
+}
+.my-events-toolbar-end .explore-clear-filters {
+  margin-left: 0;
+}
+.my-event-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.my-event-list > li {
+  min-width: 0;
+}
+.my-event-list > li + li,
+.my-event-list > .my-event-row + .my-event-row {
+  border-top: 1px solid var(--line);
+}
+.my-event-row,
+.explore-event-card.my-event-row {
+  display: grid;
+  grid-template-columns: minmax(200px, 270px) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 36px;
+  padding-block: 22px;
+  border-radius: 12px;
+}
+.my-event-list > li:first-child .my-event-row,
+.my-event-list > .my-event-row:first-of-type {
+  padding-top: 4px;
+}
+.my-event-row .explore-card-content {
+  min-width: 0;
+  padding-top: 0;
+}
+.my-event-row .explore-card-date {
+  flex-wrap: wrap;
+}
+.my-event-row .explore-card-content h3 {
+  margin-top: 9px;
+  font-size: clamp(21px, 1.9vw, 29px);
+}
+.my-event-row .explore-card-location {
+  margin-top: 8px;
+}
+.my-event-row .explore-card-tags {
+  margin-top: 14px;
+}
+.my-event-row .event-image-placeholder > svg {
+  width: 36px;
+  height: 36px;
+}
+.my-event-row .event-image-placeholder > span:last-child {
+  display: none;
+}
+.my-event-list > li:nth-child(3n + 2) .event-image-placeholder {
+  background: var(--alice-blue);
+}
+.my-event-list > li:nth-child(3n + 3) .event-image-placeholder {
+  background: var(--lavender-2);
+}
+.my-event-row-aside {
+  display: flex;
+  align-self: stretch;
+  flex-direction: column;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 4px;
+}
+.my-event-row-manage {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 10px 14px 10px 18px;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease;
+}
+.my-event-row-manage > svg {
+  transition: transform 220ms ease;
+}
+.my-event-row:hover .my-event-row-manage {
+  background: var(--periwinkle);
+  border-color: var(--periwinkle);
+}
+.my-event-row:hover .my-event-row-manage > svg {
+  transform: rotate(45deg);
+}
+@media (max-width: 1023px) {
+  .my-events-toolbar {
+    flex-wrap: wrap;
+  }
+  .my-events-status-filter {
+    flex-basis: 100%;
+  }
+  .my-event-row,
+  .explore-event-card.my-event-row {
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 18px 28px;
+  }
+  .my-event-row-aside {
+    grid-column: 2;
+    flex-direction: row;
+    align-items: center;
+    padding-block: 0;
+  }
+}
+@media (max-width: 767px) {
+  .my-events-intro {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+  }
+  .my-events-intro .explore-intro-note {
+    width: auto;
+    max-width: none;
+    padding: 0;
+  }
+  .my-events-intro .explore-intro-note > svg,
+  .my-events-intro .explore-intro-note > p {
+    display: none;
+  }
+  .my-events-create {
+    margin-top: 0;
+  }
+  .my-events-toolbar {
+    padding-block: 19px;
+  }
+}
+@media (max-width: 639px) {
+  .my-events-intro .explore-intro-note {
+    display: block;
+  }
+  .my-events-create {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .my-events-toolbar-end {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .my-events-format-field {
+    width: min(100%, 200px);
+  }
+  .my-event-row,
+  .explore-event-card.my-event-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    padding-block: 26px;
+  }
+  .my-event-row-aside {
+    grid-column: auto;
+  }
+  .my-event-row .explore-card-image {
+    aspect-ratio: 16 / 9;
+  }
+  .my-event-row .explore-card-content h3 {
+    font-size: 24px;
+  }
+}

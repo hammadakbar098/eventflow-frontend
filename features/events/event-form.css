@@ -1,0 +1,467 @@
+.event-form-page .explore-intro {
+  padding-top: 0;
+}
+.event-form-page .event-detail-body {
+  margin-top: 8px;
+  padding-top: 48px;
+  border-top: 1px solid var(--line);
+}
+.event-form-main {
+  min-width: 0;
+}
+.event-form-number {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-right: 8px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--ink);
+  font-size: 9px;
+  letter-spacing: 0;
+}
+.event-form-section > .event-form-section-copy {
+  max-width: 520px;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+.event-form-fields {
+  position: relative;
+  display: grid;
+  gap: 22px;
+  margin-top: 30px;
+}
+.event-form-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 16px;
+}
+/* Native date-time controls need room; the pair wraps before clipping. */
+.event-form-schedule {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+}
+.event-form-datetime {
+  min-width: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.event-form-capacity {
+  max-width: 220px;
+}
+.event-format-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.event-format-option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  min-height: 150px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--white);
+  cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+.event-format-option:hover {
+  border-color: var(--ink);
+}
+.event-format-option:has(input:checked) {
+  background: var(--lavender);
+  border-color: var(--baby-blue-ice);
+}
+.event-format-option:has(input:focus-visible) {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.event-format-option > input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.event-format-option:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.event-format-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--background);
+}
+.event-format-copy strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+.event-format-copy small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.event-format-check {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: transparent;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+.event-format-option:has(input:checked) .event-format-check {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+}
+.event-venue-picker,
+.event-form-online {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 50%, var(--background));
+}
+.event-form-online {
+  display: grid;
+  gap: 22px;
+}
+.event-venue-picker > legend,
+.event-form-online > legend {
+  float: left;
+  width: 100%;
+  margin-bottom: 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.event-form-online > legend {
+  margin-bottom: 0;
+}
+.event-venue-picker > legend > span {
+  margin-left: 12px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+.event-form-subheading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.event-venue-selected {
+  clear: both;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--baby-blue-ice);
+  border-radius: 12px;
+  background: var(--lavender);
+}
+.event-venue-selected > svg {
+  flex-shrink: 0;
+}
+.event-venue-selected > div {
+  flex: 1;
+  min-width: 0;
+}
+.event-venue-selected .eyebrow {
+  color: var(--muted);
+  font-size: 8px;
+}
+.event-venue-selected strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.event-venue-selected span {
+  display: block;
+  margin-top: 3px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.event-venue-selected > button {
+  flex-shrink: 0;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.event-venue-selected + div {
+  margin-top: 18px;
+}
+.event-venue-search {
+  clear: both;
+  max-width: none;
+}
+.event-venue-options {
+  display: grid;
+  gap: 8px;
+  max-height: 292px;
+  /* Room for the focus outline inside the scroll area, without shifting layout. */
+  margin: -2px -6px;
+  padding: 6px;
+  overflow-y: auto;
+  list-style: none;
+  overscroll-behavior: contain;
+}
+.event-venue-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  min-height: 60px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--background);
+  text-align: left;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+.event-venue-option:hover {
+  border-color: var(--ink);
+}
+/* Matches Explore's tag options, whose scrolling list would clip a wider offset. */
+.event-venue-option:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.event-venue-option.is-selected {
+  background: var(--lavender);
+  border-color: var(--baby-blue-ice);
+}
+.event-venue-option > span {
+  min-width: 0;
+}
+.event-venue-option strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.event-venue-option span span {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.event-venue-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-top: 12px;
+}
+.event-venue-footer .explore-tag-status {
+  margin-top: 0;
+}
+.event-venue-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--ink);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background-color 220ms ease;
+}
+.event-venue-add:hover {
+  background: var(--periwinkle);
+}
+.event-form-online .event-detail-ticket-note {
+  margin-top: 0;
+}
+.event-form-online .event-detail-ticket-note h3 {
+  font-size: 13px;
+  font-weight: 500;
+}
+.event-form-tags.explore-tag-filter {
+  margin-top: 6px;
+}
+.event-form-aside {
+  position: sticky;
+  top: 24px;
+  min-width: 0;
+}
+.event-form-aside .event-detail-facts {
+  display: grid;
+  gap: 18px;
+}
+.event-form-aside .event-detail-facts > h2 {
+  margin-top: -7px;
+}
+.event-form-aside-note {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.event-form-checklist {
+  display: grid;
+  gap: 11px;
+  padding: 18px 0;
+  margin: 0;
+  border-block: 1px solid var(--line);
+  list-style: none;
+}
+.event-form-checklist > li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  transition: color 180ms ease;
+}
+.event-form-checklist > li > svg {
+  flex-shrink: 0;
+}
+.event-form-checklist > li.is-done {
+  color: var(--success);
+}
+.event-form-checklist > li > span:last-child:not(.sr-only) {
+  margin-left: auto;
+  font-size: 10px;
+}
+.event-form-feedback {
+  display: grid;
+  gap: 10px;
+}
+.event-form-cancel {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--muted);
+  font-size: 12px;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 4px;
+}
+.event-form-cancel:hover {
+  color: var(--ink);
+  text-decoration-color: var(--ink);
+}
+.event-modal {
+  width: min(620px, calc(100vw - 32px));
+  max-width: min(620px, calc(100vw - 32px));
+}
+.event-modal[open] {
+  animation: event-modal-in 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.event-modal[open]::backdrop {
+  animation: event-modal-backdrop-in 300ms ease;
+}
+.event-modal-inner {
+  padding: 30px;
+}
+.event-modal-fields {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+.event-modal .explore-dialog-actions > .ef-button {
+  font-size: 13px;
+}
+@keyframes event-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+@keyframes event-modal-backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (max-width: 1023px) {
+  .event-format-options {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .event-format-option {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    min-height: 0;
+    padding: 16px 52px 16px 16px;
+  }
+  .event-format-check {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .event-form-page .event-detail-body {
+    grid-template-columns: minmax(0, 1fr) 285px;
+  }
+}
+@media (max-width: 767px) {
+  .event-form-page .event-detail-body {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 36px;
+  }
+  .event-form-aside {
+    position: static;
+  }
+  .event-venue-picker,
+  .event-form-online {
+    padding: 18px;
+  }
+  .event-venue-selected {
+    flex-wrap: wrap;
+  }
+  .event-venue-selected > div {
+    flex-basis: calc(100% - 36px);
+  }
+  .event-venue-selected > button {
+    margin-left: 36px;
+  }
+}
+@media (max-width: 539px) {
+  .event-form-pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .event-venue-picker > legend > span {
+    display: block;
+    margin: 4px 0 0;
+  }
+  .event-modal-inner {
+    padding: 24px 20px;
+  }
+  .event-form-capacity {
+    max-width: none;
+  }
+}
+.event-form-unchanged {
+  margin-top: -8px;
+  color: var(--muted);
+  font-size: 11px;
+  text-align: center;
+}

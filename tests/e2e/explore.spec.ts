@@ -398,3 +398,25 @@ test("adding a tag preserves a valid legacy singular tag from the URL", async ({
     .toBe(tags[0].id);
   expect(new URL(page.url()).searchParams.has("tagIds")).toBe(false);
 });
+
+test("Back after a debounced search returns to the previous results", async ({
+  page,
+}) => {
+  await mockEvents(page);
+  await page.goto("/events?page=2&limit=12");
+  await expect(
+    page.getByRole("link", { name: "View The Shared Table" }),
+  ).toBeVisible();
+  await page
+    .getByRole("searchbox", { name: "Search events", exact: true })
+    .pressSequentially("conference");
+  await expect(page).toHaveURL(/search=conference/);
+  await page.goBack();
+  await expect(page).toHaveURL(/\/events\?page=2&limit=12$/);
+  // The committed draft must not be written again once Back has settled.
+  await page.waitForTimeout(600);
+  await expect(page).toHaveURL(/\/events\?page=2&limit=12$/);
+  await expect(
+    page.getByRole("searchbox", { name: "Search events", exact: true }),
+  ).toHaveValue("");
+});

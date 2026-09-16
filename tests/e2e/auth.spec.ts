@@ -87,6 +87,16 @@ test("login sends normalized payload once and shows accessible success", async (
       },
     });
   });
+  let workspaceAuthorization: string | undefined;
+  await page.route(/\/backend\/api\/events\/mine(?:\?|$)/, (route) => {
+    workspaceAuthorization = route.request().headers().authorization;
+    return route.fulfill({
+      json: {
+        data: [],
+        pagination: { page: 1, limit: 12, total: 0, totalPages: 0 },
+      },
+    });
+  });
   await page.goto("/login");
   await fillLogin(page);
   await page.getByRole("button", { name: "Log in", exact: true }).click();
@@ -99,10 +109,13 @@ test("login sends normalized payload once and shows accessible success", async (
   ).toBeDisabled();
   await page.locator("form").dispatchEvent("submit");
   release();
+  // Signing in continues to the organizer workspace with the in-memory session.
+  await expect(page).toHaveURL(/\/dashboard\/events(?:\?|$)/);
   await expect(
-    page.getByRole("heading", { name: "You’re signed in." }),
+    page.getByRole("heading", { level: 1, name: /My events/ }),
   ).toBeVisible();
   expect(requestCount).toBe(1);
+  expect(workspaceAuthorization).toBe("Bearer test-access-token");
   expect(
     await page.evaluate(() => ({
       local: localStorage.length,
@@ -110,8 +123,8 @@ test("login sends normalized payload once and shows accessible success", async (
     })),
   ).toEqual({ local: 0, session: 0 });
   await expect(
-    page.getByRole("link", { name: "Explore EventFlow" }),
-  ).toHaveAttribute("href", "/events");
+    page.getByRole("link", { name: "My events", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
 });
 
 test("signup validates confirmation and sends only the backend fields", async ({

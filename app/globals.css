@@ -73,14 +73,11 @@ input {
   background: var(--periwinkle);
   color: var(--ink);
 }
+/* The EventFlow focus standard (set by Explore): every control, including
+   .ef-input fields, uses this ink outline. Do not add coloured focus rings. */
 :focus-visible {
   outline: 3px solid var(--ink);
   outline-offset: 5px;
-}
-.ef-input:focus-visible {
-  outline: 2px solid var(--periwinkle-3);
-  outline-offset: 2px;
-  border-color: var(--ink);
 }
 .ef-input {
   transition:

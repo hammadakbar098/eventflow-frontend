@@ -73,7 +73,8 @@ jobs:
               "aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 751900120658.dkr.ecr.eu-north-1.amazonaws.com",
               "docker pull ${{ needs.build-and-push.outputs.image_uri }}",
               "docker rm -f eventflow-frontend || true",
-              "docker run -d --name eventflow-frontend --restart unless-stopped -p 127.0.0.1:3001:3000 ${{ needs.build-and-push.outputs.image_uri }}"
+              "docker network inspect eventflow-network >/dev/null 2>&1 || docker network create eventflow-network",
+              "docker run -d --name eventflow-frontend --restart unless-stopped --network eventflow-network -p 127.0.0.1:3001:3000 ${{ needs.build-and-push.outputs.image_uri }}"
             ]' \
             --query "Command.CommandId" \
             --output text)

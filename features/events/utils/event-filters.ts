@@ -1,8 +1,9 @@
 import { z } from "zod";
-import { eventFormatSchema } from "../schemas/event.schema";
-import type { EventFilters } from "../types/event.types";
+import { eventFormatSchema, eventStatusSchema } from "../schemas/event.schema";
+import type { EventFilters, MyEventFilters } from "../types/event.types";
 
 export const DEFAULT_EVENT_FILTERS: EventFilters = { page: 1, limit: 12 };
+export const DEFAULT_MY_EVENT_FILTERS: MyEventFilters = { page: 1, limit: 12 };
 type SearchParams = Pick<URLSearchParams, "get" | "getAll">;
 const uuid = z.string().uuid();
 const uuidV4 = z.string().uuid({ version: "v4" });
@@ -112,4 +113,39 @@ export function hasEventFilters(filters: EventFilters) {
   return Object.keys(eventFilterParams(filters)).some(
     (key) => key !== "page" && key !== "limit",
   );
+}
+
+// Organizer filters follow the same canonical URL rules as public discovery.
+export function parseMyEventFilters(params: SearchParams): MyEventFilters {
+  const status = eventStatusSchema.safeParse(
+    params.get("status")?.toUpperCase(),
+  );
+  const format = eventFormatSchema.safeParse(
+    params.get("format")?.toUpperCase(),
+  );
+  return {
+    page: positiveInteger(params.get("page"), 1),
+    limit: positiveInteger(params.get("limit"), 12, 50),
+    ...(text(params.get("search")) && { search: text(params.get("search")) }),
+    ...(status.success && { status: status.data }),
+    ...(format.success && { format: format.data }),
+  };
+}
+
+export function myEventFilterParams(
+  filters: MyEventFilters,
+): Record<string, string> {
+  const params: Record<string, string> = {
+    page: String(filters.page),
+    limit: String(filters.limit),
+  };
+  for (const key of ["search", "status", "format"] as const) {
+    const value = filters[key];
+    if (value) params[key] = value;
+  }
+  return params;
+}
+
+export function hasMyEventFilters(filters: MyEventFilters) {
+  return Boolean(filters.search || filters.status || filters.format);
 }

@@ -73,3 +73,56 @@ export const paginatedEventsSchema = z.object({
     totalPages: z.number().int().nonnegative(),
   }),
 });
+
+// Organizer contracts verified against the running Nest API (/events/mine, /venues).
+export const eventStatusSchema = z.enum([
+  "DRAFT",
+  "SCHEDULED",
+  "PUBLISHED",
+  "SOLD_OUT",
+  "CANCELLED",
+  "POSTPONED",
+  "COMPLETED",
+]);
+export const organizerEventSummarySchema = eventSummarySchema.extend({
+  status: eventStatusSchema,
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+export const paginatedOrganizerEventsSchema = paginatedEventsSchema.extend({
+  data: z.array(organizerEventSummarySchema),
+});
+export const paginatedVenuesSchema = z.object({
+  data: z.array(venueSchema),
+  pagination: paginatedEventsSchema.shape.pagination,
+});
+// Create, update and lifecycle responses vary in shape (create nests tags, and
+// several include private details); only the identifiers the UI needs are kept.
+export const eventReferenceSchema = z.object({
+  id: z.string(),
+  slug: z.string().min(1),
+  status: eventStatusSchema,
+});
+export const eventMediaTypeSchema = eventMediaSchema.shape.type;
+export const organizerMediaSchema = eventMediaSchema.extend({
+  originalName: z.string().nullish(),
+  mimeType: z.string().nullish(),
+  sizeBytes: z.number().int().nullish(),
+});
+// The organizer detail is the only response that may carry private access data.
+export const organizerEventSchema = publicEventSchema.extend({
+  status: eventStatusSchema,
+  cancelledAt: z.string().nullish(),
+  cancellationReason: z.string().nullish(),
+  postponedAt: z.string().nullish(),
+  postponementReason: z.string().nullish(),
+  media: z.array(organizerMediaSchema).default([]),
+  onlineDetails: z
+    .object({
+      platform: z.string(),
+      accessUrl: z.string(),
+      accessCode: z.string().nullish(),
+      accessInstructions: z.string().nullish(),
+    })
+    .nullish(),
+});

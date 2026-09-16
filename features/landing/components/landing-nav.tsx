@@ -7,6 +7,9 @@ import { ArrowUpRight, Menu, X } from "lucide-react";
 import { Brand } from "@/components/ui/brand";
 import { ButtonLink } from "@/components/ui/button";
 import { ROUTES } from "@/constants/routes";
+import { AccountMenu } from "@/features/auth/components/account-menu";
+import { useSignOut } from "@/features/auth/hooks/use-auth-mutations";
+import { useHasSession } from "@/features/auth/hooks/use-session";
 
 const links = [
   { href: ROUTES.FEATURES, label: "Features" },
@@ -17,6 +20,11 @@ const links = [
 export function LandingNav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const hasSession = useHasSession();
+  const { signOut, pending: signingOut } = useSignOut();
+  const workspaceCurrent = pathname.startsWith(ROUTES.DASHBOARD)
+    ? "page"
+    : undefined;
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   function closeMenu() {
@@ -44,12 +52,26 @@ export function LandingNav() {
           ))}
         </nav>
         <div className="desktop-account-nav">
-          <Link href={ROUTES.LOGIN} className="nav-login">
-            Log in
-          </Link>
-          <ButtonLink href={ROUTES.SIGNUP}>
-            Get started <ArrowUpRight size={16} aria-hidden="true" />
-          </ButtonLink>
+          {hasSession ? (
+            <>
+              <ButtonLink
+                href={ROUTES.MY_EVENTS}
+                aria-current={workspaceCurrent}
+              >
+                My events <ArrowUpRight size={16} aria-hidden="true" />
+              </ButtonLink>
+              <AccountMenu />
+            </>
+          ) : (
+            <>
+              <Link href={ROUTES.LOGIN} className="nav-login">
+                Log in
+              </Link>
+              <ButtonLink href={ROUTES.SIGNUP}>
+                Get started <ArrowUpRight size={16} aria-hidden="true" />
+              </ButtonLink>
+            </>
+          )}
         </div>
         <button
           ref={triggerRef}
@@ -80,12 +102,37 @@ export function LandingNav() {
             </Link>
           ))}
           <div className="mobile-account-links">
-            <Link href={ROUTES.LOGIN} onClick={closeMenu}>
-              Log in
-            </Link>
-            <ButtonLink href={ROUTES.SIGNUP} onClick={closeMenu}>
-              Get started <ArrowUpRight size={16} aria-hidden="true" />
-            </ButtonLink>
+            {hasSession ? (
+              <>
+                <Link href={ROUTES.ACCOUNT} onClick={closeMenu}>
+                  Account
+                </Link>
+                <button
+                  type="button"
+                  className="mobile-logout"
+                  disabled={signingOut}
+                  onClick={() => void signOut()}
+                >
+                  {signingOut ? "Logging out…" : "Log out"}
+                </button>
+                <ButtonLink
+                  href={ROUTES.MY_EVENTS}
+                  onClick={closeMenu}
+                  aria-current={workspaceCurrent}
+                >
+                  My events <ArrowUpRight size={16} aria-hidden="true" />
+                </ButtonLink>
+              </>
+            ) : (
+              <>
+                <Link href={ROUTES.LOGIN} onClick={closeMenu}>
+                  Log in
+                </Link>
+                <ButtonLink href={ROUTES.SIGNUP} onClick={closeMenu}>
+                  Get started <ArrowUpRight size={16} aria-hidden="true" />
+                </ButtonLink>
+              </>
+            )}
           </div>
         </nav>
       )}

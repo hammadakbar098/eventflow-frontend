@@ -1,11 +1,23 @@
 import type { NextConfig } from "next";
 import { API_BASE_URL, API_ENDPOINTS, API_PROXY_PREFIX } from "./constants/api";
 import { MEDIA_BASE_URL } from "./constants/media";
+import { ROUTES } from "./constants/routes";
 
 const nextConfig: NextConfig = {
   output: "standalone",
   images: {
     remotePatterns: MEDIA_BASE_URL ? [new URL(`${MEDIA_BASE_URL}/**`)] : [],
+  },
+  async redirects() {
+    // The workspace is session-gated in the browser, so route-level redirects
+    // cannot run inside it.
+    return [
+      {
+        source: ROUTES.DASHBOARD,
+        destination: ROUTES.MY_EVENTS,
+        permanent: false,
+      },
+    ];
   },
   async rewrites() {
     // The existing Nest backend has no CORS middleware. Proxy only known API
@@ -17,10 +29,14 @@ const nextConfig: NextConfig = {
     }
     const endpoints = [
       ...Object.values(API_ENDPOINTS.AUTH),
+      API_ENDPOINTS.USERS.ME,
       API_ENDPOINTS.EVENTS.LIST,
+      API_ENDPOINTS.EVENTS.MINE,
+      `${API_ENDPOINTS.EVENTS.MINE}/:path*`,
       `${API_ENDPOINTS.EVENTS.LIST}/:slug`,
       API_ENDPOINTS.EVENT_CATEGORIES,
       API_ENDPOINTS.TAGS,
+      API_ENDPOINTS.VENUES,
     ];
     return endpoints.map((endpoint) => ({
       source: `${API_PROXY_PREFIX}${endpoint}`,

@@ -1,6 +1,7 @@
 import type {
   EventFormat,
-  PublicEvent,
+  EventMedia,
+  EventStatus,
   VenueSummary,
 } from "../types/event.types";
 
@@ -8,6 +9,15 @@ export const EVENT_FORMAT_LABELS: Record<EventFormat, string> = {
   PHYSICAL: "In person",
   ONLINE: "Online",
   HYBRID: "Hybrid",
+};
+export const EVENT_STATUS_LABELS: Record<EventStatus, string> = {
+  DRAFT: "Draft",
+  SCHEDULED: "Scheduled",
+  PUBLISHED: "Published",
+  SOLD_OUT: "Sold out",
+  CANCELLED: "Cancelled",
+  POSTPONED: "Postponed",
+  COMPLETED: "Completed",
 };
 export function eventTimeZone(timezone: string) {
   try {
@@ -64,14 +74,18 @@ export function eventLocation(
     : "Venue to be announced";
   return format === "HYBRID" ? `${location} + online` : location;
 }
-export function getEventCover(event: PublicEvent) {
+export function getEventCover<Media extends EventMedia>(event: {
+  media: Media[];
+}) {
   return (
     event.media
       .filter((media) => media.type === "COVER")
       .sort((a, b) => a.sortOrder - b.sortOrder)[0] ?? null
   );
 }
-export function getEventGallery(event: PublicEvent) {
+export function getEventGallery<Media extends EventMedia>(event: {
+  media: Media[];
+}) {
   return event.media
     .filter((media) => media.type === "GALLERY")
     .sort((a, b) => a.sortOrder - b.sortOrder);

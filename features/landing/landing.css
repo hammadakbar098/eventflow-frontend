@@ -1388,3 +1388,81 @@
     display: none;
   }
 }
+.account-menu {
+  position: relative;
+}
+.account-menu-trigger {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--lavender);
+  font-family: var(--font-heading);
+  font-size: 15px;
+  letter-spacing: -0.04em;
+  transition: background-color 220ms ease;
+}
+.account-menu-trigger:hover,
+.account-menu-trigger[aria-expanded="true"] {
+  background: var(--periwinkle);
+}
+.account-menu-panel {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 250px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--white);
+  box-shadow: 0 24px 70px -25px rgb(25 28 26 / 30%);
+}
+.account-menu-identity {
+  padding: 12px 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.account-menu-identity p {
+  font-size: 14px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.account-menu-identity span {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.account-menu-panel nav {
+  display: grid;
+  padding-block: 6px;
+  border-bottom: 1px solid var(--line);
+}
+.account-menu-panel nav a,
+.account-menu-logout {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  text-align: left;
+  transition: background-color 180ms ease;
+}
+.account-menu-panel nav a:hover,
+.account-menu-logout:hover:not(:disabled) {
+  background: var(--surface);
+}
+.account-menu-logout {
+  margin-top: 6px;
+  color: var(--danger);
+}
+.mobile-logout {
+  min-height: 44px;
+  color: var(--danger);
+  font-size: 14px;
+}
